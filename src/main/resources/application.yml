@@ -11,9 +11,9 @@ spring:
 
   # ── Base de données ────────────────────────────────────────────
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/sgs_db}
-    username: ${DB_USER:sgs_user}
-    password: ${DB_PASSWORD:sgs_pass}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USER:issa}
+    password: ${DB_PASSWORD:issa}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: SGS-HikariPool
@@ -136,7 +136,7 @@ springdoc:
 app:
   security:
     jwt:
-      secret: ${JWT_SECRET:CHANGEME_USE_AT_LEAST_512_BITS_IN_PRODUCTION_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+      secret: ${JWT_SECRET:/3OSwiriMYX+6NUPsJPnkLI6DpRCq03Tc53mMVDbdz2nrPoDHcV83DRLV6Pc9a8jWEKPbEZSMdlix2q7RrAVOg==}
       expiration-ms: ${JWT_EXPIRATION_MS:3600000}           # 1 heure
       refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}    # 7 jours
   pagination:

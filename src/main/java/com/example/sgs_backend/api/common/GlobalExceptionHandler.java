@@ -1,6 +1,6 @@
 package com.example.sgs_backend.api.common;
 
-import com.sgs.domain.common.exception.SgsException;
+import com.example.sgs_backend.domain.common.exception.SgsException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
