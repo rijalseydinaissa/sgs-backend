@@ -1,0 +1,161 @@
+# ═══════════════════════════════════════════════════════════════════
+#  SGS — Configuration Spring Boot principale
+# ═══════════════════════════════════════════════════════════════════
+
+spring:
+  application:
+    name: sgs-backend
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # ── Base de données ────────────────────────────────────────────
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sgs_db}
+    username: ${DB_USER:sgs_user}
+    password: ${DB_PASSWORD:sgs_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: SGS-HikariPool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+
+  # ── JPA / Hibernate ───────────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate       # TOUJOURS validate en prod — Flyway gère le schéma
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_batch_fetch_size: 50   # Optimisation N+1 queries
+        jdbc:
+          batch_size: 50
+          order_inserts: true
+          order_updates: true
+    open-in-view: false         # DÉSACTIVÉ — anti-pattern de performances
+
+  # ── Flyway — Migrations SQL ───────────────────────────────────
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
+    out-of-order: false
+
+  # ── Redis ─────────────────────────────────────────────────────
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 1
+
+  # ── Email ─────────────────────────────────────────────────────
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  # ── Jackson JSON ──────────────────────────────────────────────
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: UTC
+
+# ── Serveur ───────────────────────────────────────────────────────
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# ── Actuator / Monitoring ─────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: SGS Backend
+    version: 2.0.0
+    description: Système de Gestion de Stock Multi-Catégories
+
+# ── Swagger / OpenAPI ─────────────────────────────────────────────
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+    try-it-out-enabled: true
+  show-actuator: false
+
+# ── Propriétés applicatives SGS ───────────────────────────────────
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:CHANGEME_USE_AT_LEAST_512_BITS_IN_PRODUCTION_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+      expiration-ms: ${JWT_EXPIRATION_MS:3600000}           # 1 heure
+      refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}    # 7 jours
+  pagination:
+    default-page-size: 20
+    max-page-size: 100
+  stock:
+    low-stock-alert-threshold: 10
+    expiry-alert-days: 30
+  storage:
+    type: ${STORAGE_TYPE:local}
+    base-path: ${STORAGE_PATH:uploads/}
+    max-file-size-bytes: 5242880   # 5MB
+
+# ── Logging ───────────────────────────────────────────────────────
+logging:
+  level:
+    com.sgs: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.flywaydb: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -1,0 +1,24 @@
+# ═══════════════════════════════════════════════════════════════════
+#  SGS — Surcharge profil PRODUCTION
+#  Toutes les valeurs sensibles viennent des variables d'environnement
+# ═══════════════════════════════════════════════════════════════════
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  swagger-ui:
+    enabled: false   # Swagger désactivé en production
+
+logging:
+  level:
+    com.sgs: WARN
+    org.springframework: WARN
+    root: WARN

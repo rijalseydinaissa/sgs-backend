@@ -1,0 +1,33 @@
+# ═══════════════════════════════════════════════════════════════════
+#  SGS — Surcharge profil TEST (H2 in-memory)
+# ═══════════════════════════════════════════════════════════════════
+spring:
+  datasource:
+    url: jdbc:h2:mem:sgs_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false   # Désactivé pour les tests — H2 crée le schéma via ddl-auto
+
+  data:
+    redis:
+      host: localhost
+      port: 6370    # Port différent pour éviter conflit avec Redis réel
+
+app:
+  security:
+    jwt:
+      secret: test-secret-key-at-least-512-bits-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      expiration-ms: 3600000
+      refresh-expiration-ms: 604800000
+
+logging:
+  level:
+    com.sgs: DEBUG

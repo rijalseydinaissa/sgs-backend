@@ -1,0 +1,95 @@
+# ═══════════════════════════════════════════════════════════════════
+#  SGS — Stack de développement local
+#  Démarrer : docker-compose up -d
+#  Arrêter  : docker-compose down
+# ═══════════════════════════════════════════════════════════════════
+
+version: '3.9'
+
+services:
+
+  # ── Application Spring Boot ──────────────────────────────────────
+  sgs-app:
+    build: .
+    container_name: sgs-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://sgs-postgres:5432/sgs_db
+      DB_USER: sgs_user
+      DB_PASSWORD: sgs_pass
+      REDIS_HOST: sgs-redis
+      REDIS_PORT: 6379
+      JWT_SECRET: dev-secret-key-minimum-512-bits-pour-hmac-sha512-xxxxxxxxxxxxxxxxxxxxx
+    depends_on:
+      sgs-postgres:
+        condition: service_healthy
+      sgs-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - sgs-network
+
+  # ── PostgreSQL ───────────────────────────────────────────────────
+  sgs-postgres:
+    image: postgres:16-alpine
+    container_name: sgs-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: sgs_db
+      POSTGRES_USER: sgs_user
+      POSTGRES_PASSWORD: sgs_pass
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sgs_user -d sgs_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - sgs-network
+
+  # ── Redis ────────────────────────────────────────────────────────
+  sgs-redis:
+    image: redis:7-alpine
+    container_name: sgs-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ""  # Sans password en dev
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - sgs-network
+
+  # ── pgAdmin — Interface Web PostgreSQL ───────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: sgs-pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@sgs.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    depends_on:
+      - sgs-postgres
+    networks:
+      - sgs-network
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  sgs-network:
+    driver: bridge
