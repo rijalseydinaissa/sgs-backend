@@ -22,7 +22,6 @@ import java.util.UUID;
 /**
  * ✅ extends BaseController<User, UUID, UserRequest, UserResponse> (Sprint 1)
  *
- * AVANT (❌ Sprint 2 initial) :
  *   class UserController { // tout réimplémenté }
  *   → findAll(), findById(), create(), update(), delete() écrits à la main
  *
