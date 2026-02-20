@@ -1,6 +1,5 @@
 package com.example.sgs_backend.infrastructure.persistence.product;
 
-
 import com.example.sgs_backend.domain.product.Product;
 import com.example.sgs_backend.domain.product.ProductStatus;
 import com.example.sgs_backend.infrastructure.persistence.common.BaseJpaRepository;
@@ -16,8 +15,7 @@ import java.util.UUID;
 
 /**
  * ✅ extends BaseJpaRepository<Product, UUID> (Sprint 1)
- * Hérite : findByIdAndDeletedFalse, findAllByDeletedFalse,
- *          softDeleteById, existsByIdAndDeletedFalse, countByDeletedFalse
+ * ✅ CORRIGÉ : utilise currentStock.value et minimumStock.value (Quantity VO)
  */
 @Repository
 public interface ProductJpaRepository extends BaseJpaRepository<Product, UUID> {
@@ -33,22 +31,22 @@ public interface ProductJpaRepository extends BaseJpaRepository<Product, UUID> {
 
     long countByCategoryIdAndDeletedFalse(UUID categoryId);
 
-    // Produits en rupture d'alerte (stock <= seuil min)
+    // ✅ CORRIGÉ : currentStock.value <= minimumStock.value
     @Query("SELECT p FROM Product p WHERE p.deleted = false " +
-           "AND (:siteId IS NULL OR p.siteId = :siteId) " +
-           "AND p.currentStock <= p.minimumStock AND p.status != 'ARCHIVED'")
+            "AND (:siteId IS NULL OR p.siteId = :siteId) " +
+            "AND p.currentStock.value <= p.minimumStock.value AND p.status != 'ARCHIVED'")
     List<Product> findLowStockProducts(@Param("siteId") UUID siteId);
 
-    // Produits épuisés
+    // ✅ CORRIGÉ : currentStock.value = 0
     @Query("SELECT p FROM Product p WHERE p.deleted = false " +
-           "AND (:siteId IS NULL OR p.siteId = :siteId) " +
-           "AND p.currentStock = 0 AND p.status = 'OUT_OF_STOCK'")
+            "AND (:siteId IS NULL OR p.siteId = :siteId) " +
+            "AND p.currentStock.value = 0 AND p.status = 'OUT_OF_STOCK'")
     List<Product> findOutOfStockProducts(@Param("siteId") UUID siteId);
 
     // Recherche texte (nom, référence, barcode)
     @Query("SELECT p FROM Product p WHERE p.deleted = false " +
-           "AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "  OR LOWER(p.reference) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "  OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :search, '%')))")
+            "AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "  OR LOWER(p.reference) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "  OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Product> searchProducts(@Param("search") String search, Pageable pageable);
 }

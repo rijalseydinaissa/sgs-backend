@@ -3,7 +3,6 @@ package com.example.sgs_backend.domain.expense;
 import com.example.sgs_backend.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.*;
 
@@ -11,7 +10,6 @@ import java.util.*;
  * ✅ extends BaseEntity
  * Catégorie arborescente (comme ProductCategory).
  */
-@SuperBuilder
 @Entity
 @Table(name = "expense_categories", indexes = {
     @Index(name = "idx_exp_cat_code", columnList = "code"),
@@ -34,8 +32,7 @@ public class ExpenseCategory extends BaseEntity {
     private ExpenseCategory parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<ExpenseCategory> children = new ArrayList<>();
+    protected List<ExpenseCategory> children = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean active = true;

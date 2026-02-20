@@ -169,7 +169,7 @@ public class Quantity {
      * Calcule l'écart entre stock théorique et réel (pour inventaire).
      * Valeur positive = excédent. Valeur négative = manque.
      */
-    public Quantity differenceWith(Quantity actual) {
+    public BigDecimal differenceWith(Quantity actual) {
         assertSameUnit(actual);
         return actual.value.subtract(this.value);
     }

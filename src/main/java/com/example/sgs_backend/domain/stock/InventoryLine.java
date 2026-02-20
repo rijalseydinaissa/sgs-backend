@@ -6,7 +6,6 @@ import com.example.sgs_backend.domain.common.valueobject.Quantity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -47,11 +46,11 @@ public class InventoryLine extends BaseEntity {
     // ── Logique métier ────────────────────────────────────────────
 
     /** Écart = compté - théorique (positif = excédent, négatif = manquant) */
-    public Quantity getDiscrepancy() {
+    public Number getDiscrepancy() {
         return countedQuantity.differenceWith(theoreticalQuantity);
     }
 
-    public boolean hasDiscrepancy() {
-        return !getDiscrepancy().isZero();
-    }
+    //public boolean hasDiscrepancy() {
+        //return !getDiscrepancy().isZero();
+    //}
 }
