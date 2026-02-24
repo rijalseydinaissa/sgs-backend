@@ -48,7 +48,7 @@ public class SecurityConfig {
             "/swagger-ui.html","/swagger-ui/**","/v3/api-docs","/v3/api-docs/**",
             "/swagger-resources/**","/webjars/**",
             "/actuator/health","/actuator/info",
-            "/api/v1/auth/login","/api/v1/auth/refresh","/api/v1/auth/2fa/verify"
+            "/api/v1/auth/login","/api/v1/auth/refresh","/api/v1/auth/2fa/verify","/api/v1/bootstrap/**"
     };
 
     @Bean
@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/roles/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/bootstrap/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

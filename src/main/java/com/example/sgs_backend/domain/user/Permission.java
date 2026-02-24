@@ -10,6 +10,7 @@ import lombok.*;
  *                       createdBy, updatedBy, version, deleted
  * Zéro duplication de code.
  */
+@Builder
 @Entity
 @Table(name = "permissions")
 @Getter @Setter @NoArgsConstructor

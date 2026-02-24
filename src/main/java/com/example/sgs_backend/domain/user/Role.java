@@ -4,6 +4,7 @@ import com.example.sgs_backend.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.nio.file.FileStore;
 import java.util.HashSet;
 import java.util.Set;
 

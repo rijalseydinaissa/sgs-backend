@@ -138,7 +138,8 @@ WHERE r.name = 'ROLE_AUDITOR';
 
 -- ── Admin par défaut : admin / Admin@1234 ─────────────────────────
 INSERT INTO users (username, email, password, first_name, last_name, status, created_by)
-VALUES ('admin','admin@sgs.com','Passer123@!','Super','Admin','ACTIVE','SYSTEM');
+-- ✅ PAR ÇA (hash BCrypt de "Admin@1234")
+VALUES ('admin','admin@sgs.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy','Super','Admin','ACTIVE','SYSTEM');
 
 INSERT INTO user_roles (user_id, role_id)
 SELECT u.id, r.id FROM users u CROSS JOIN roles r WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN';

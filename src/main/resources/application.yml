@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════
-#  SGS — Configuration Spring Boot principale
+#  SGS — Configuration Spring Boot principale (CORRIGÉE)
 # ═══════════════════════════════════════════════════════════════════
 
 spring:
@@ -11,7 +11,7 @@ spring:
 
   # ── Base de données ────────────────────────────────────────────
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sgs_backend}
     username: ${DB_USER:issa}
     password: ${DB_PASSWORD:issa}
     driver-class-name: org.postgresql.Driver
@@ -27,18 +27,18 @@ spring:
   # ── JPA / Hibernate ───────────────────────────────────────────
   jpa:
     hibernate:
-      ddl-auto: validate       # TOUJOURS validate en prod — Flyway gère le schéma
+      ddl-auto: validate        # ✅ Hibernate NE MODIFIE JAMAIS le schéma
     show-sql: false
+    open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        default_batch_fetch_size: 50   # Optimisation N+1 queries
+        default_batch_fetch_size: 50
         jdbc:
           batch_size: 50
           order_inserts: true
           order_updates: true
-    open-in-view: false         # DÉSACTIVÉ — anti-pattern de performances
 
   # ── Flyway — Migrations SQL ───────────────────────────────────
   flyway:
@@ -137,8 +137,8 @@ app:
   security:
     jwt:
       secret: ${JWT_SECRET:/3OSwiriMYX+6NUPsJPnkLI6DpRCq03Tc53mMVDbdz2nrPoDHcV83DRLV6Pc9a8jWEKPbEZSMdlix2q7RrAVOg==}
-      expiration-ms: ${JWT_EXPIRATION_MS:3600000}           # 1 heure
-      refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}    # 7 jours
+      expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+      refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}
   pagination:
     default-page-size: 20
     max-page-size: 100
@@ -148,7 +148,7 @@ app:
   storage:
     type: ${STORAGE_TYPE:local}
     base-path: ${STORAGE_PATH:uploads/}
-    max-file-size-bytes: 5242880   # 5MB
+    max-file-size-bytes: 5242880
 
 # ── Logging ───────────────────────────────────────────────────────
 logging:

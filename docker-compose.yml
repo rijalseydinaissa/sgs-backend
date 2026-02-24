@@ -16,9 +16,9 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      DB_URL: jdbc:postgresql://sgs-postgres:5432/sgs_db
-      DB_USER: sgs_user
-      DB_PASSWORD: sgs_pass
+      DB_URL: jdbc:postgresql://sgs-postgres:5432/sgs_backend
+      DB_USER: issa
+      DB_PASSWORD: issa
       REDIS_HOST: sgs-redis
       REDIS_PORT: 6379
       JWT_SECRET: dev-secret-key-minimum-512-bits-pour-hmac-sha512-xxxxxxxxxxxxxxxxxxxxx
@@ -38,9 +38,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: sgs_db
-      POSTGRES_USER: sgs_user
-      POSTGRES_PASSWORD: sgs_pass
+      POSTGRES_DB: sgs_backend
+      POSTGRES_USER: issa
+      POSTGRES_PASSWORD: issa
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - pgdata:/var/lib/postgresql/data

@@ -133,4 +133,5 @@ public class User extends BaseEntity {
     public void addRole(Role role)                  { this.roles.add(role); }
     public boolean hasRole(RoleName rn)             { return roles.stream().anyMatch(r -> r.getName() == rn); }
     public boolean hasPermission(PermissionName pn) { return roles.stream().anyMatch(r -> r.hasPermission(pn)); }
+
 }
